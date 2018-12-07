@@ -97,14 +97,7 @@ class ChatActivity : AppCompatActivity() {
             editText.setText("")
         }
     }
-
-    /*private fun recvFromIntent()
-    {
-        if(intent.extras.containsKey("User"){
-                User = intent.getStringExtra("User")
-
-            }
-    }*/
+    
     private fun recvUserFromFirebase(){
         val user = FirebaseAuth.getInstance().currentUser
 
