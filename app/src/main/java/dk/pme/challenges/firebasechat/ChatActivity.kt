@@ -97,7 +97,7 @@ class ChatActivity : AppCompatActivity() {
             editText.setText("")
         }
     }
-    
+
     private fun recvUserFromFirebase(){
         val user = FirebaseAuth.getInstance().currentUser
 
