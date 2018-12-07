@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FirebaseChat</string>
+    <string name="alertDeleteConfirmationTitle">Remove</string>
+    <string name="alertDeleteConfirmationText">Are you sure you want to delete the entry?</string>
+    <string name="alertSetPositiveButtonText">Delete</string>
+    <string name="alertSetNegativeButtonText">Cancel</string>
+</resources>
