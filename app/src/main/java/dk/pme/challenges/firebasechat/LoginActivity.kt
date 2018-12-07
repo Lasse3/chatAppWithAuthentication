@@ -35,7 +35,7 @@ class LoginActivity: AppCompatActivity() {
 
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                if (!it.isSuccessful) {
+                if (it.isSuccessful) {
                     //Log.d("Login", "Successfully logged in: ${it.result.user.uid}")
                     val intent = Intent(this, ChatActivity::class.java)
                     intent.putExtra("User", email)
