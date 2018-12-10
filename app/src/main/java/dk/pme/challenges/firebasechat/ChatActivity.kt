@@ -3,25 +3,22 @@ package dk.pme.challenges.firebasechat
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.ArrayAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.auth.FirebaseUser
-
 
 
 data class Message(var value: String = "", var user: String = "")
 
 class ChatActivity : AppCompatActivity() {
-    lateinit var UserEmail:String
+    private lateinit var userEmail:String
     private val MESSAGES_REF = "messages"
     val keys = mutableListOf<String>()
     lateinit var arrayAdapter: ArrayAdapter<String>
-    private lateinit var firebaseDBRef: DatabaseReference
+    private lateinit var firebaseDbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,13 +30,12 @@ class ChatActivity : AppCompatActivity() {
         arrayAdapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, ArrayList<String>())
         listView.adapter = arrayAdapter
 
-        //Initialize DatabaseReference with offline persistence
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-        firebaseDBRef=FirebaseDatabase.getInstance().reference
+        //Get database reference
+        firebaseDbRef=FirebaseDatabase.getInstance().reference
 
         //A Reference represents a specific location in your Database and can be used for reading
         // or writing data to that Database location. We create a child reference
-        val messagesRef = firebaseDBRef.child(MESSAGES_REF)
+        val messagesRef = firebaseDbRef.child(MESSAGES_REF)
 
         messagesRef.addChildEventListener(object: ChildEventListener{
             override fun onCancelled(p0: DatabaseError) {
@@ -59,7 +55,6 @@ class ChatActivity : AppCompatActivity() {
                     arrayAdapter.remove(message?.value)
             }
 
-
             override fun onChildAdded(snapshot: DataSnapshot, p1: String?) {
                 val message = snapshot.getValue(Message::class.java)
 
@@ -69,15 +64,13 @@ class ChatActivity : AppCompatActivity() {
             }
         })
 
-
-
         listView.setOnItemLongClickListener{  _, _, position, _->
             val alert = AlertDialog.Builder(this)
             alert.setTitle(getString(R.string.alertDeleteConfirmationTitle))
             alert.setMessage(getString(R.string.alertDeleteConfirmationText))
             alert.setPositiveButton(getString(R.string.alertSetPositiveButtonText)) { _, _->
                 //Delete list entry
-                firebaseDBRef.child(MESSAGES_REF).child(keys[position]).removeValue()
+                firebaseDbRef.child(MESSAGES_REF).child(keys[position]).removeValue()
                 keys.removeAt(position)
             }
             alert.setNegativeButton(getString(R.string.alertSetNegativeButtonText)){ _, _->
@@ -88,12 +81,12 @@ class ChatActivity : AppCompatActivity() {
             true
         }
     }
-    fun sendChatMessage(view: View) {
+    fun sendChatMessage() {
         val text = editText.text.toString()
 
         if (!text.isEmpty()) {
-            val message = Message(text, UserEmail)
-            firebaseDBRef.child(MESSAGES_REF).push().setValue(message)
+            val message = Message(text, userEmail)
+            firebaseDbRef.child(MESSAGES_REF).push().setValue(message)
             editText.setText("")
         }
     }
@@ -102,8 +95,7 @@ class ChatActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
 
         if (user != null) {
-            UserEmail = user.email.toString()
-
+            userEmail = user.email.toString()
         }
     }
 

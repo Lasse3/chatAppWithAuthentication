@@ -37,7 +37,6 @@ class LoginActivity: AppCompatActivity() {
             .addOnCompleteListener {
                 if (!it.isSuccessful) {
                     //Log.d("Login", "Successfully logged in: ${it.result.user.uid}")
-
                 }
                 else{
                     val intent = Intent(this, ChatActivity::class.java)
